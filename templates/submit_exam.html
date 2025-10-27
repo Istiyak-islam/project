@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Submit Exam{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Submit Code for: {{ exam.title }}</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="code" class="form-label">Your Code / Submission</label>
+            <textarea class="form-control" id="code" name="code" rows="10" placeholder="Paste your code here" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}

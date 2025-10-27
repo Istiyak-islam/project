@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Lab Assistant Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Lab Assistant - Software Management</h2>
+    <a href="{{ url_for('logout') }}" class="btn btn-danger float-end mb-3">Logout</a>
+
+    <div class="row">
+        {% for s in softwares %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ s.name }}</h5>
+                    <p>Status:
+                        {% if s.installed %}
+                            <span class="badge bg-success">Installed ✅</span>
+                        {% else %}
+                            <span class="badge bg-danger">Not Installed ❌</span>
+                        {% endif %}
+                    </p>
+
+                    {% if not s.installed %}
+                        <a href="{{ url_for('lab_install', software_name=s.name) }}" class="btn btn-primary btn-sm">
+                            Install
+                        </a>
+                    {% else %}
+                        {% if s.path_windows %}
+                            <p><code>{{ s.path_windows }}</code></p>
+                        {% endif %}
+                        <button class="btn btn-secondary btn-sm" disabled>Installed</button>
+                    {% endif %}
+
+                    {% if s.url %}
+                        <a href="{{ s.url }}" target="_blank" class="btn btn-info btn-sm mt-2">Official Page</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

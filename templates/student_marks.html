@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Your Marks{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Your Marks</h2>
+    {% if submissions %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Exam</th>
+                    <th>Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in submissions %}
+                <tr>
+                    <td>{{ sub.exam_id }}</td>
+                    <td>{{ sub.marks or 'Not marked yet' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You haven't submitted any exams yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

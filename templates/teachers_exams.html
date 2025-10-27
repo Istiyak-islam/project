@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Teacher Dashboard - Manage Exams</h2>
+    
+    <hr>
+    <h4>Create New Exam</h4>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="title" class="form-label">Exam Title</label>
+            <input type="text" class="form-control" id="title" name="title" placeholder="Enter exam title" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Optional"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Exam</button>
+    </form>
+
+    <hr>
+    <h4>Existing Exams</h4>
+    {% if exams %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Submissions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exam in exams %}
+                <tr>
+                    <td>{{ exam.title }}</td>
+                    <td>{{ exam.description or 'No description' }}</td>
+                    <td><a href="{{ url_for('view_submissions', exam_id=exam.id) }}" class="btn btn-sm btn-success">View Submissions</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No exams created yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

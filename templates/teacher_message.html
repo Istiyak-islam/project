@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Message {{ student.username }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Messaging with {{ student.username }}</h2>
+    <div class="mb-3">
+        <ul class="list-group">
+            {% for msg in messages %}
+            <li class="list-group-item {% if msg.sender_id == current_user.id %}list-group-item-primary{% else %}list-group-item-light{% endif %}">
+                <strong>{{ 'You' if msg.sender_id == current_user.id else student.username }}:</strong> {{ msg.content }}
+                <br><small class="text-muted">{{ msg.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <form method="POST">
+        <div class="mb-3">
+            <textarea class="form-control" name="content" rows="3" placeholder="Type your message..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Send</button>
+    </form>
+</div>
+{% endblock %}

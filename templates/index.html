@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Lab Assistant</title>
+
+    <!-- Google Fonts + Bootstrap -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #007bff, #6610f2);
+            color: #fff;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container-box {
+            background: #fff;
+            color: #333;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 90%;
+            max-width: 700px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #0d6efd;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .btn-option {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            border: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-option:hover {
+            transform: scale(1.05);
+        }
+
+        .teacher { background: #007bff; color: #fff; }
+        .student { background: #6610f2; color: #fff; }
+        .assistant { background: #198754; color: #fff; }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-box">
+        <h1 class="title">Smart Lab Assistant</h1>
+        <p class="subtitle">Manage your lab exams, communicate, and monitor software installations — all in one system.</p>
+
+        <a href="{{ url_for('login') }}" class="btn btn-option teacher">👨‍🏫 Teacher Login</a>
+        <a href="{{ url_for('login') }}" class="btn btn-option student">👩‍🎓 Student Login</a>
+        <a href="{{ url_for('login') }}" class="btn btn-option assistant">🧑‍🔧 Lab Assistant Login</a>
+
+        <div class="footer">
+            <p>New user? <a href="{{ url_for('signup') }}">Sign up here</a></p>
+            <p>&copy; {{ current_year if current_year else 2025 }} Smart Lab Assistant. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Dynamically insert year
+        document.querySelector('.footer').innerHTML = document.querySelector('.footer').innerHTML.replace('{{ current_year if current_year else 2025 }}', new Date().getFullYear());
+    </script>
+</body>
+</html>

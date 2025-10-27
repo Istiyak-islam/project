@@ -1,0 +1,132 @@
+{
+  "softwares": [
+    {
+      "id": 1,
+      "name": "Code::Blocks",
+      "path_windows": "C:\\\\Program Files (x86)\\\\CodeBlocks\\\\codeblocks.exe",
+      "cmd": null,
+      "type": "exe",
+      "url": "https://sourceforge.net/projects/codeblocks/files/Binaries/20.03/Windows/codeblocks-20.03mingw-setup.exe/download"
+    },
+    {
+      "id": 2,
+      "name": "Cisco Packet Tracer",
+      "path_windows": "C:\\\\Program Files (x86)\\\\Cisco Packet Tracer 8.2.1\\\\bin\\\\PacketTracer.exe",
+      "cmd": null,
+      "type": "exe",
+      "url": "https://www.netacad.com/portal/resources/packet-tracer"
+    },
+    {
+      "id": 3,
+      "name": "MATLAB",
+      "path_windows": "C:\\\\Program Files\\\\MATLAB\\\\R2025a\\\\bin\\\\matlab.exe",
+      "cmd": null,
+      "type": "exe",
+      "url": "https://ssd.mathworks.com/supportfiles/downloads/R2025a/Release/Windows/installers/matlab_R2025a_win64.exe"
+    },
+    {
+      "id": 4,
+      "name": "Java Runtime Environment",
+      "path_windows": "C:\\\\Program Files\\\\Java\\\\jre1.8.0_401\\\\bin\\\\java.exe",
+      "cmd": "java -version",
+      "type": "cmd",
+      "url": "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=249556_2f38c3b165be4555a1fa6e98c45e0808"
+    },
+    {
+      "id": 5,
+      "name": "Eclipse IDE",
+      "path_windows": "C:\\\\Program Files\\\\eclipse\\\\eclipse.exe",
+      "cmd": null,
+      "type": "exe",
+      "url": "https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/2025-09/R/eclipse-inst-jre-win64.exe"
+    },
+    {
+      "id": 6,
+      "name": "graphics.h (WinBGI Header)",
+      "path_windows": "C:\\\\MinGW\\\\include\\\\graphics.h",
+      "cmd": null,
+      "type": "file",
+      "url": "https://winbgim.codecutter.org/"
+    },
+    {
+      "id": 7,
+      "name": "Jupyter Notebook",
+      "path_windows": null,
+      "cmd": "jupyter --version",
+      "type": "cmd",
+      "url": "https://jupyter.org/install"
+    },
+    {
+      "id": 8,
+      "name": "Anaconda",
+      "path_windows": "C:\\\\ProgramData\\\\Anaconda3\\\\python.exe",
+      "cmd": "conda --version",
+      "type": "cmd",
+      "url": "https://repo.anaconda.com/archive/Anaconda3-2025.11-Windows-x86_64.exe"
+    },
+    {
+      "id": 9,
+      "name": "PyCharm Community Edition",
+      "path_windows": "C:\\\\Program Files\\\\JetBrains\\\\PyCharm Community Edition 2025.3\\\\bin\\\\pycharm64.exe",
+      "cmd": null,
+      "type": "exe",
+      "url": "https://download.jetbrains.com/python/pycharm-community-2025.3.exe"
+    },
+    {
+      "id": 10,
+      "name": "Visual Studio Code",
+      "path_windows": "C:\\\\Program Files\\\\Microsoft VS Code\\\\Code.exe",
+      "cmd": "code --version",
+      "type": "cmd",
+      "url": "https://update.code.visualstudio.com/latest/win32-x64/stable"
+    },
+    {
+      "id": 11,
+      "name": "AutoCAD",
+      "path_windows": "C:\\\\Program Files\\\\Autodesk\\\\AutoCAD 2025\\\\acad.exe",
+      "cmd": null,
+      "type": "exe",
+      "url": "https://www.autodesk.com/products/autocad/free-trial"
+    },
+    {
+      "id": 12,
+      "name": "Android Studio",
+      "path_windows": "C:\\\\Program Files\\\\Android\\\\Android Studio\\\\bin\\\\studio64.exe",
+      "cmd": null,
+      "type": "exe",
+      "url": "https://redirector.gvt1.com/edgedl/android/studio/install/2025.3.1.21/android-studio-2025.3.1.21-windows.exe"
+    },
+    {
+      "id": 13,
+      "name": "Xilinx Vivado Design Suite",
+      "path_windows": "C:\\\\Xilinx\\\\Vivado\\\\2025.1\\\\bin\\\\vivado.exe",
+      "cmd": null,
+      "type": "exe",
+      "url": "https://www.xilinx.com/support/download.html"
+    },
+    {
+      "id": 14,
+      "name": "Docker Desktop",
+      "path_windows": "C:\\\\Program Files\\\\Docker\\\\Docker\\\\Docker Desktop.exe",
+      "cmd": "docker --version",
+      "type": "cmd",
+      "url": "https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
+    },
+    {
+      "id": 15,
+      "name": "Git",
+      "path_windows": "C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe",
+      "cmd": "git --version",
+      "type": "cmd",
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe"
+    },
+    {
+      "id": 16,
+      "name": "Wireshark",
+      "path_windows": "C:\\\\Program Files\\\\Wireshark\\\\Wireshark.exe",
+      "cmd": null,
+      "type": "exe",
+      "url": "https://2.na.dl.wireshark.org/win64/Wireshark-win64-4.6.0.exe"
+    }
+  ]
+}

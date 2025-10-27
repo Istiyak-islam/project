@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Assistant Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+        }
+        .container {
+            margin-top: 40px;
+        }
+        .software-card {
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            background: #fff;
+        }
+        .installed {
+            color: green;
+            font-weight: 600;
+        }
+        .not-installed {
+            color: red;
+            font-weight: 600;
+        }
+        .progress {
+            height: 10px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="mb-4">Lab Assistant Dashboard</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div id="softwareList">
+        {% for software in softwares %}
+        <div class="software-card d-flex justify-content-between align-items-center" id="software-{{ software.id }}">
+            <div>
+                <h5>{{ software.name }}</h5>
+                <p class="{{ 'installed' if software.is_installed else 'not-installed' }}" id="status-{{ software.id }}">
+                    {% if software.is_installed %}
+                        Installed at: {{ software.path_windows or 'Detected via system' }}
+                    {% else %}
+                        Not Installed
+                    {% endif %}
+                </p>
+                <div class="progress d-none" id="progress-{{ software.id }}">
+                    <div class="progress-bar bg-success" id="progress-bar-{{ software.id }}" style="width: 0%;"></div>
+                </div>
+            </div>
+            <div>
+                {% if not software.is_installed %}
+                <button class="btn btn-primary install-btn" data-id="{{ software.id }}">Auto Install</button>
+                {% if software.url %}
+                <button class="btn btn-outline-info redirect-btn" data-url="{{ software.url }}">Manual Download</button>
+                {% endif %}
+                {% else %}
+                <button class="btn btn-success" disabled>Installed</button>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="{{ url_for('logout') }}" class="btn btn-danger mt-4">Logout</a>
+</div>
+
+<script>
+$(document).ready(function() {
+
+    // 🔍 Check installation status for each software (AJAX)
+    function checkSoftwareStatus() {
+        {% for software in softwares %}
+        $.get("{{ url_for('check_software_status', software_name=software.name) }}", function(data) {
+            let statusElem = $("#status-{{ software.id }}");
+            let installBtn = $("#software-{{ software.id }}").find(".install-btn");
+            let redirectBtn = $("#software-{{ software.id }}").find(".redirect-btn");
+
+            if (data.installed) {
+                statusElem.text("Installed at: " + (data.path || "Detected via system"))
+                          .removeClass("not-installed")
+                          .addClass("installed");
+                installBtn.replaceWith('<button class="btn btn-success" disabled>Installed</button>');
+                if (redirectBtn.length) redirectBtn.hide();
+            } else {
+                statusElem.text("Not Installed")
+                          .removeClass("installed")
+                          .addClass("not-installed");
+            }
+        });
+        {% endfor %}
+    }
+
+    // ⚙️ Auto Install with progress bar
+    $(".install-btn").click(function() {
+        let softwareId = $(this).data("id");
+        let progressContainer = $("#progress-" + softwareId);
+        let progressBar = $("#progress-bar-" + softwareId);
+        let statusText = $("#status-" + softwareId);
+        let btn = $(this);
+
+        btn.prop("disabled", true).text("Installing...");
+        progressContainer.removeClass("d-none");
+        let width = 0;
+        let interval = setInterval(() => {
+            if (width >= 90) clearInterval(interval);
+            width += 5;
+            progressBar.css("width", width + "%");
+        }, 300);
+
+        $.post("{{ url_for('lab_install', software_name='') }}" + softwareId, { software_id: softwareId }, function(data) {
+            if (data.status === "success") {
+                clearInterval(interval);
+                progressBar.css("width", "100%");
+                statusText.text("Installed successfully!").removeClass("not-installed").addClass("installed");
+                progressContainer.addClass("d-none");
+                btn.replaceWith('<button class="btn btn-success" disabled>Installed</button>');
+            } else {
+                clearInterval(interval);
+                progressContainer.addClass("d-none");
+                statusText.text("Auto-install failed").removeClass("installed").addClass("not-installed");
+                alert("Auto-install failed. Try manual download.");
+                btn.prop("disabled", false).text("Auto Install");
+            }
+        });
+    });
+
+    // 🌐 Manual Download Redirect
+    $(".redirect-btn").click(function() {
+        window.open($(this).data("url"), "_blank");
+    });
+
+    // 🔁 Periodically check software status every 10 seconds
+    setInterval(checkSoftwareStatus, 10000);
+
+    // Initial check on page load
+    checkSoftwareStatus();
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

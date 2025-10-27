@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+
+    <!-- Bootstrap + jQuery -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            margin-top: 40px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .timer {
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="mb-4">Student Dashboard</h2>
+
+    <!-- Lab Exams -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            Active Lab Exams
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Exam Title</th>
+                        <th>Description</th>
+                        <th>Duration</th>
+                        <th>Time Remaining</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exam in exams %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ exam.title }}</td>
+                        <td>{{ exam.description }}</td>
+                        <td>{{ exam.duration_minutes }} min</td>
+                        <td>
+                            {% if not exam.submitted and exam.time_remaining > 0 %}
+                                <span class="timer" id="timer{{ exam.id }}">{{ exam.time_remaining }} seconds</span>
+                            {% elif exam.submitted %}
+                                <span class="badge bg-success">Submitted</span>
+                            {% else %}
+                                <span class="badge bg-danger">Expired</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if not exam.submitted and exam.time_remaining > 0 %}
+                                <button class="btn btn-primary btn-sm start-exam-btn" data-id="{{ exam.id }}" data-title="{{ exam.title }}">
+                                    Start Exam
+                                </button>
+                            {% elif exam.submitted and exam.submission_file %}
+                                <a href="{{ url_for('download_submission', filename=exam.submission_file) }}" class="btn btn-info btn-sm">View Submission</a>
+                            {% elif exam.submitted %}
+                                <span class="text-muted">Submitted</span>
+                            {% else %}
+                                <span class="text-muted">Cannot Submit</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">No active exams</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Submit Work Modal -->
+    <div class="modal fade" id="submitModal" tabindex="-1" aria-labelledby="submitModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="submitModalLabel">Submit Exam</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="submitForm" enctype="multipart/form-data">
+                <input type="hidden" id="examIdInput" name="exam_id">
+                <div class="mb-3">
+                    <label for="softwareSelect" class="form-label">Select Software</label>
+                    <select class="form-select" id="softwareSelect" name="software" required>
+                        {% for s in softwares %}
+                        <option value="{{ s.name }}">{{ s.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="fileInput" class="form-label">Select File to Submit</label>
+                    <input type="file" class="form-control" id="fileInput" name="file" required>
+                </div>
+                <button type="submit" class="btn btn-success">Submit Exam</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Marks -->
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            Your Marks
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Exam Title</th>
+                        <th>Mark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for exam in exams %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ exam.title }}</td>
+                        <td>
+                            {% if exam.mark is not none %}
+                                {{ exam.mark }}
+                            {% else %}
+                                Not Graded
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center">No exams assigned yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a href="{{ url_for('logout') }}" class="btn btn-danger mt-3">Logout</a>
+</div>
+
+<script>
+$(document).ready(function(){
+
+    // Timer countdown
+    {% for exam in exams %}
+    {% if not exam.submitted and exam.time_remaining > 0 %}
+    let time{{ exam.id }} = {{ exam.time_remaining }};
+    let timerInterval{{ exam.id }} = setInterval(function(){
+        if(time{{ exam.id }} <= 0){
+            clearInterval(timerInterval{{ exam.id }});
+            $('#timer{{ exam.id }}').text('Expired');
+        } else {
+            $('#timer{{ exam.id }}').text(time{{ exam.id }} + ' seconds');
+            time{{ exam.id }}--;
+        }
+    }, 1000);
+    {% endif %}
+    {% endfor %}
+
+    // Start Exam
+    $('.start-exam-btn').click(function(){
+        let examId = $(this).data('id');
+        let examTitle = $(this).data('title');
+        $('#examIdInput').val(examId);
+        $('#submitModalLabel').text('Submit Exam for ' + examTitle);
+        $('#submitModal').modal('show');
+    });
+
+    // Submit Exam
+    $('#submitForm').submit(function(e){
+        e.preventDefault();
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: "{{ url_for('submit_exam') }}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data){
+                if(data.status === 'success'){
+                    alert('Exam submitted successfully!');
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            }
+        });
+    });
+
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

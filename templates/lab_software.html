@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Lab Assistant Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Check Installed Software</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Software Name</th>
+                <th>Status</th>
+                <th>Path / Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for software in software_status %}
+            <tr>
+                <td>{{ software.name }}</td>
+                <td>
+                    {% if software.installed %}
+                        <span class="badge bg-success">Installed</span>
+                    {% else %}
+                        <span class="badge bg-danger">Not Installed</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if software.installed %}
+                        {{ software.path }}
+                    {% else %}
+                        <a href="{{ url_for('install_software', software_name=software.name) }}" class="btn btn-sm btn-primary">Install / Download</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
